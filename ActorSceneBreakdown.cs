@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using System.IO;
-using System.Data.OleDb;
+using System.Collections;
+//using System.Data.OleDb;
 using Microsoft.VisualBasic.FileIO;
 
 
@@ -14,28 +15,79 @@ namespace Carpool
     class ActorSceneBreakdown
     {
         string strInputFile;
+        int intStartingRow;
 
-        List<string[]> listRows = new List<string[]>();
+        List<string[]> listInputRows = new List<string[]>();
+        ArrayList alRolesPerScene = new ArrayList();
 
-        public ActorSceneBreakdown(string _sInputFile)
+        public ActorSceneBreakdown(string _sInputFile, int _iStartingRow=4)
         {
             this.strInputFile = _sInputFile;
+            this.intStartingRow = _iStartingRow;
         }
 
-        public List<string[]> ParsedData
+        public List<string[]> InputRows
         {
             get
             {
-                return this.listRows;
+                return this.listInputRows;
             }
         }
 
+        public ArrayList RolesPerScene
+        {
+            get
+            {
+                return this.alRolesPerScene;
+            }
+        }
+
+
+        public int GetRolesPerScene()
+        {
+
+            int iReturnStatus = -1;
+
+            try
+            {
+
+
+                for (int i = 0; i < this.InputRows.Count; i++)
+                {
+                    ArrayList alRoles = new ArrayList();
+                    foreach (string[] saRoles in this.InputRows)
+                    {
+                        int j = 0;
+                        foreach (string sRole in saRoles)
+                        {
+                            if (i == j && sRole != "")
+                            {
+                                alRoles.Add(sRole);
+                            }
+                            j++;
+                        }  
+                    }
+                    this.alRolesPerScene.Add(alRoles);
+                    i++;
+                }
+
+                iReturnStatus = 0;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return iReturnStatus;
+        }
 
         public int ReadFile()
         {
 
             int iReturnStatus = -1;
             TextFieldParser parser=null;
+            bool bHasError = false;
 
             try
             {
@@ -57,19 +109,27 @@ namespace Carpool
                         iColumnCount = fields.Length;
                     }
 
-                    if (iColumnCount == fields.Length)
+                    if (i >= this.intStartingRow)
                     {
-                        this.listRows.Add(fields);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Number of columns in row number: " + i + " does not equal iColumnCount: " + iColumnCount + " which means that you probably have extra commas for fields: " + fields);
+
+                        if (iColumnCount == fields.Length)
+                        {
+                            this.listInputRows.Add(fields);
+                        }
+                        else
+                        {
+                            bHasError = true;
+                            Console.WriteLine("Number of columns in row number: " + i + " does not equal iColumnCount: " + iColumnCount + " which means that you probably have extra commas for fields: " + fields);
+                        }
                     }
 
                     i++;
                 }
 
-                iReturnStatus = 0;
+                if (bHasError == false)
+                {
+                    iReturnStatus = 0;
+                }
 
             }
             catch (Exception e)
@@ -90,9 +150,12 @@ namespace Carpool
 
             try
             {
-                if (ReadFile() == 0)
+                if (this.ReadFile() == 0)
                 {
-                    iReturnStatus = 0;
+                    if (this.GetRolesPerScene() == 0)
+                    {
+                        iReturnStatus = 0;
+                    }
                 }
 
             }
