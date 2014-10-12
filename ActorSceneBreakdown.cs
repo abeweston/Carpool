@@ -20,14 +20,16 @@ namespace Carpool
         List<string[]> listInputRows = new List<string[]>();
         ArrayList alRolesPerScene = new ArrayList();
         ArrayList alUniqueRoles = new ArrayList();
+        ArrayList alPhrasesToRemove = new ArrayList();
         Dictionary<string,int> dicCounts = new Dictionary<string,int>();
         Dictionary<string, int> dicTotals = new Dictionary<string, int>();
         Dictionary<string, double> dicRatios = new Dictionary<string, double>();
 
-        public ActorSceneBreakdown(string _sInputFile, int _iStartingRow=4)
+        public ActorSceneBreakdown(string _sInputFile, int _iStartingRow=4, ArrayList _alPhrasesToRemove=null)
         {
             this.strInputFile = _sInputFile;
             this.intStartingRow = _iStartingRow;
+            this.alPhrasesToRemove = _alPhrasesToRemove;
         }
 
         private List<string[]> InputRows
@@ -169,12 +171,9 @@ namespace Carpool
                 {
                     foreach (string sRoleDestination in this.alUniqueRoles)
                     {
-                        if (sRoleSource != sRoleDestination)
+                        if (this.CalculateRatiosForRole(sRoleSource, sRoleDestination) == 0)
                         {
-                            if (this.CalculateRatiosForRole(sRoleSource, sRoleDestination) == 0)
-                            {
-                                iReturnStatus = 0;
-                            }
+                            iReturnStatus = 0;
                         }
                     }
 
@@ -196,60 +195,28 @@ namespace Carpool
 
             try
             {
-                int iTotal = this.Totals[_sRoleSource];
                 string sKeyRoles = _sRoleSource + "|" + _sRoleDestination;
-                int iCount = 0;
 
-                if (this.Counts.ContainsKey(sKeyRoles))
+                if (_sRoleSource == _sRoleDestination)
                 {
-                    iCount = this.Counts[sKeyRoles];
+                    this.Ratios[sKeyRoles] = 1;
+                    iReturnStatus = 0;
                 }
-
-                double dRatio = Math.Round(Convert.ToDouble(iCount) / Convert.ToDouble(iTotal),2);
-                this.Ratios[sKeyRoles] = dRatio;
-
-                iReturnStatus = 0;
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            return iReturnStatus;
-        }
-
-        private int GetRolesPerScene()
-        {
-
-            int iReturnStatus = -1;
-
-            try
-            {
-                for (int i = 0; i < this.NumScenes; i++)
+                else
                 {
-                    ArrayList alRoles = new ArrayList();
-                    foreach (string[] saRoles in this.InputRows)
+                    int iTotal = this.Totals[_sRoleSource];
+                    int iCount = 0;
+
+                    if (this.Counts.ContainsKey(sKeyRoles))
                     {
-                        int j = 0;
-                        foreach (string sRole in saRoles)
-                        {
-                            if (this.alUniqueRoles.Contains(sRole) == false && sRole != "")
-                            {
-                                this.alUniqueRoles.Add(sRole);
-                            }
-
-                            if (i == j && sRole != "")
-                            {
-                                alRoles.Add(sRole);
-                            }
-                            j++;
-                        }
+                        iCount = this.Counts[sKeyRoles];
                     }
-                    this.alRolesPerScene.Add(alRoles);
-                }
 
-                iReturnStatus = 0;
+                    double dRatio = Math.Round(Convert.ToDouble(iCount) / Convert.ToDouble(iTotal), 2);
+                    this.Ratios[sKeyRoles] = dRatio;
+
+                    iReturnStatus = 0;
+                }
 
             }
             catch (Exception e)
@@ -324,6 +291,83 @@ namespace Carpool
                         }
 
                     }
+                }
+
+                iReturnStatus = 0;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return iReturnStatus;
+        }
+
+        private int FormatRoles(string _sInputRole, ref string _sOutputRole)
+        {
+
+            int iReturnStatus = -1;
+
+            try
+            {
+                _sOutputRole = _sInputRole.ToLower();
+
+                if (this.alPhrasesToRemove != null)
+                {
+                    foreach (string sPhrase in this.alPhrasesToRemove)
+                    {
+                        _sOutputRole = _sOutputRole.Replace(sPhrase.ToLower(), "");
+                    }
+                }
+                iReturnStatus = 0;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return iReturnStatus;
+        }
+
+        private int GetRolesPerScene()
+        {
+
+            int iReturnStatus = -1;
+
+            try
+            {
+                for (int i = 0; i < this.NumScenes; i++)
+                {
+                    ArrayList alRoles = new ArrayList();
+                    foreach (string[] saRoles in this.InputRows)
+                    {
+                        int j = 0;
+                        foreach (string sRole in saRoles)
+                        {
+                            string sRoleFormatted = "";
+                            if (this.FormatRoles(sRole, ref sRoleFormatted) == 0)
+                            {
+
+                                if (this.alUniqueRoles.Contains(sRoleFormatted) == false && sRoleFormatted != "")
+                                {
+                                    this.alUniqueRoles.Add(sRoleFormatted);
+                                }
+
+                                if (i == j && sRoleFormatted != "")
+                                {
+                                    alRoles.Add(sRoleFormatted);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Error when calling this.FormatRoles for sRole: " + sRole);
+                            }
+                            j++;
+                        }
+                    }
+                    this.alRolesPerScene.Add(alRoles);
                 }
 
                 iReturnStatus = 0;

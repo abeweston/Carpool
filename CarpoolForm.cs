@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Collections;
 
 
 namespace Carpool
@@ -29,8 +30,15 @@ namespace Carpool
             string sDestinationState = "CA";
 
             string sActorSceneBreakdownFile = @"D:\abe\My Documents\StarStruck\Carpooling\seussical actor scene breakdown 9.25.14_without_commas.csv";
+            ArrayList alPhrasesToRemove = new ArrayList();
+            alPhrasesToRemove.Add(" in the hat");
+            alPhrasesToRemove.Add(":");
+            alPhrasesToRemove.Add("Isabel  Sophia  Nicole");
+            alPhrasesToRemove.Add("Natalie  Jaezali  Amabel");
+            alPhrasesToRemove.Add("FULL CAST");
+            alPhrasesToRemove.Add("?");
 
-            ActorSceneBreakdown breakdown = new ActorSceneBreakdown(sActorSceneBreakdownFile);
+            ActorSceneBreakdown breakdown = new ActorSceneBreakdown(sActorSceneBreakdownFile, _alPhrasesToRemove:alPhrasesToRemove);
             breakdown.Run();
 
             Distance dist = new Distance(sSourceAddress, sSourceCity, sSourceState, sDestinationAddress, sDestinationCity, sDestinationState);
