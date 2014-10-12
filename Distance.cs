@@ -70,7 +70,6 @@ namespace Carpool
             catch(Exception e)
             {
                 Console.WriteLine(e.Message);
-                Console.Read();
             }
 
             return iReturnStatus;
@@ -92,7 +91,6 @@ namespace Carpool
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                Console.Read();
             }
 
             return iReturnStatus;
@@ -116,7 +114,6 @@ namespace Carpool
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                Console.Read();
             }
 
             return iReturnStatus;
