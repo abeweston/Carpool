@@ -41,6 +41,50 @@ namespace Carpool
             ActorSceneBreakdown breakdown = new ActorSceneBreakdown(sActorSceneBreakdownFile, _alPhrasesToRemove:alPhrasesToRemove);
             breakdown.Run();
 
+            ArrayList alSource = new ArrayList();
+            ArrayList alDestination = new ArrayList();
+
+            double dGreatestRatio = -1;
+            alSource = new ArrayList();
+            alDestination = new ArrayList();
+            alSource.Add("Cat");
+            alDestination.Add("jojo");
+            if (breakdown.GetGreatestRatio(alSource, alDestination, ref dGreatestRatio) == 0)
+            {
+                string bla = "";
+            }
+
+            alSource = new ArrayList();
+            alDestination = new ArrayList();
+            alSource.Add("Cat");
+            alDestination.Add("jojo");
+            alDestination.Add("cat");
+            if (breakdown.GetGreatestRatio(alSource, alDestination, ref dGreatestRatio) == 0)
+            {
+                string bla = "";
+            }
+
+            alSource = new ArrayList();
+            alDestination = new ArrayList();
+            alSource.Add("Wickershams");
+            alDestination.Add("Grinch");
+            if (breakdown.GetGreatestRatio(alSource, alDestination, ref dGreatestRatio) == 0)
+            {
+                string bla = "";
+            }
+
+            alSource = new ArrayList();
+            alDestination = new ArrayList();
+            alSource.Add("Wickershams");
+            alSource.Add("Mayors");
+            alDestination.Add("Grinch");
+            if (breakdown.GetGreatestRatio(alSource, alDestination, ref dGreatestRatio) == 0)
+            {
+                string bla = "";
+            }
+
+
+
             Distance dist = new Distance(sSourceAddress, sSourceCity, sSourceState, sDestinationAddress, sDestinationCity, sDestinationState);
             dist.Run();
             double dNumMiles = dist.NumMiles;

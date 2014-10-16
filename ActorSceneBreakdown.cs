@@ -82,6 +82,14 @@ namespace Carpool
             }
         }
 
+        private ArrayList UniqueRoles
+        {
+            get
+            {
+                return this.alUniqueRoles;
+            }
+        }
+
         private int CalculateCounts()
         {
 
@@ -91,7 +99,7 @@ namespace Carpool
             try
             {
 
-                foreach (string sRole in this.alUniqueRoles)
+                foreach (string sRole in this.UniqueRoles)
                 {
 
                     if (this.CalculateCountsForRole(sRole) == 0)
@@ -101,7 +109,7 @@ namespace Carpool
 
                 }
 
-                if (iSuccessCount == this.alUniqueRoles.Count)
+                if (iSuccessCount == this.UniqueRoles.Count)
                 {
                     iReturnStatus = 0;
                 }
@@ -167,9 +175,9 @@ namespace Carpool
             try
             {
 
-                foreach (string sRoleSource in this.alUniqueRoles)
+                foreach (string sRoleSource in this.UniqueRoles)
                 {
-                    foreach (string sRoleDestination in this.alUniqueRoles)
+                    foreach (string sRoleDestination in this.UniqueRoles)
                     {
                         if (this.CalculateRatiosForRole(sRoleSource, sRoleDestination) == 0)
                         {
@@ -236,7 +244,7 @@ namespace Carpool
             try
             {
 
-                foreach (string sRole in this.alUniqueRoles)
+                foreach (string sRole in this.UniqueRoles)
                 {
 
                     if (this.CalculateTotalsForRole(sRole) == 0)
@@ -246,7 +254,7 @@ namespace Carpool
 
                 }
 
-                if (iSuccessCount == this.alUniqueRoles.Count)
+                if (iSuccessCount == this.UniqueRoles.Count)
                 {
                     iReturnStatus = 0;
                 }
@@ -331,6 +339,98 @@ namespace Carpool
             return iReturnStatus;
         }
 
+        public int GetGreatestRatio(ArrayList _alSourceRoles, ArrayList _alDestinationRoles, ref double dGreatestRatio)
+        {
+
+            int iReturnStatus = -1;
+            dGreatestRatio = -1;
+
+            try
+            {
+                int iSuccessCount = 0;
+                int iExpectedCount = (_alSourceRoles.Count * _alDestinationRoles.Count);
+                dGreatestRatio = -1;
+                foreach (string sSourceRole in _alSourceRoles)
+                {
+                    foreach (string sDestinationRole in _alDestinationRoles)
+                    {
+                        double dRatio = -1;
+                        if (this.GetRatio(sSourceRole,sDestinationRole,ref dRatio) == 0)
+                        {
+                            if (dRatio > dGreatestRatio)
+                            {
+                                dGreatestRatio = dRatio;
+                            }
+                            iSuccessCount = iSuccessCount + 1;
+                        }
+                    }
+                }
+
+                if (iSuccessCount == iExpectedCount)
+                {
+                    iReturnStatus = 0;
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return iReturnStatus;
+        }
+
+        private int GetRatio(string _sSourceRole, string _sDestinationRole,ref double dRatio)
+        {
+
+            int iReturnStatus = -1;
+
+            try
+            {
+                dRatio = -1;
+                string sFormattedSourceRole = "";
+                if (this.FormatRoles(_sSourceRole, ref sFormattedSourceRole) == 0)
+                {
+                    if (this.UniqueRoles.Contains(sFormattedSourceRole))
+                    {
+                        string sFormattedDestinationRole = "";
+                        if (this.FormatRoles(_sDestinationRole, ref sFormattedDestinationRole) == 0)
+                        {
+                            if (this.UniqueRoles.Contains(sFormattedDestinationRole))
+                            {
+                                string sKey = sFormattedSourceRole + "|" + sFormattedDestinationRole;
+                                if (this.Ratios.ContainsKey(sKey))
+                                {
+                                    dRatio = this.Ratios[sKey];
+                                    iReturnStatus = 0;
+                                }
+                                else
+                                {
+                                    dRatio = 0;
+                                    iReturnStatus = 0;
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Unknown sFormattedDestinationRole: " + sFormattedDestinationRole);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Unknown sFormattedSourceRole: " + sFormattedSourceRole);
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            return iReturnStatus;
+        }
+
         private int GetRolesPerScene()
         {
 
@@ -350,9 +450,9 @@ namespace Carpool
                             if (this.FormatRoles(sRole, ref sRoleFormatted) == 0)
                             {
 
-                                if (this.alUniqueRoles.Contains(sRoleFormatted) == false && sRoleFormatted != "")
+                                if (this.UniqueRoles.Contains(sRoleFormatted) == false && sRoleFormatted != "")
                                 {
-                                    this.alUniqueRoles.Add(sRoleFormatted);
+                                    this.UniqueRoles.Add(sRoleFormatted);
                                 }
 
                                 if (i == j && sRoleFormatted != "")
