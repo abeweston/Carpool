@@ -518,7 +518,7 @@ namespace Carpool
                         else
                         {
                             bHasError = true;
-                            Console.WriteLine("Number of columns in row number: " + i + " does not equal iColumnCount: " + this.intNumScenes + " which means that you probably have extra commas for fields: " + fields);
+                            Console.WriteLine("fields.Length: " + fields.Length + " in row number: " + i + " does not equal this.intNumScenes: " + this.intNumScenes + " which means that you probably have extra commas for fields: " + fields);
                         }
                     }
 
