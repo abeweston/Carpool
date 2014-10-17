@@ -1,5 +1,5 @@
-Name,Address,City,Role
-Jake Stewart,38623 Cherry Ln,Fremont,cat
-James Blane,177 Williams Ct.,Union City,whos|Mayors
-Alice Francis,5437 Reseda Cir,Fremont,whos
-Beth Winkle,37926 Vallejo St,Fremont,Horton|sour kangaroo
+Child Name,Parent Name,Address,City,Role,Telephone
+Jake Stewart,Glinda Stewart,38623 Cherry Ln,Fremont,cat,510-299-0987
+James Blane,Bob Blane,177 Williams Ct.,Union City,whos|Mayors,510-299-0989
+Alice Francis,Ted Francis,5437 Reseda Cir,Fremont,whos,510-299-5777
+Beth Winkle,Jill January,37926 Vallejo St,Fremont,Horton|sour kangaroo,510-299-5555

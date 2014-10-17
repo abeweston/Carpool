@@ -29,7 +29,7 @@ namespace Carpool
             string sDestinationCity = "Fremont";
             string sDestinationState = "CA";
 
-            string sActorSceneBreakdownFile = @"D:\abe\My Documents\StarStruck\Carpooling\seussical actor scene breakdown 9.25.14_without_commas.csv";
+            string sActorSceneBreakdownFile = @"D:\abe\My Documents\Visual Studio 2010\Projects\Carpool\Carpool\input\seussical actor scene breakdown 9.25.14_without_commas.csv";
             ArrayList alPhrasesToRemove = new ArrayList();
             alPhrasesToRemove.Add(" in the hat");
             alPhrasesToRemove.Add(":");

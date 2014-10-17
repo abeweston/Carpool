@@ -11,17 +11,21 @@ namespace Carpool
 {
     class CastMember
     {
-        string strName;
+        string strChildName;
+        string strParentName;
         string strAddress;
         string strCity;
         ArrayList alRoles;
+        string strTelephone;
 
-        public CastMember(string _sName, string _sAddress, string _sCity, ArrayList _alRoles)
+        public CastMember(string _sChildName, string _sParentName, string _sAddress, string _sCity, ArrayList _alRoles,string _sTelephone)
         {
-            this.strName = _sName;
+            this.strChildName = _sChildName;
+            this.strParentName = _sParentName;
             this.strAddress = _sAddress;
             this.strCity = _sCity;
             this.alRoles = _alRoles;
+            this.strTelephone = _sTelephone;
         }
 
         public string Address
@@ -29,6 +33,14 @@ namespace Carpool
             get
             {
                 return this.strAddress;
+            }
+        }
+
+        public string ChildName
+        {
+            get
+            {
+                return this.strChildName;
             }
         }
 
@@ -44,16 +56,15 @@ namespace Carpool
         {
             get
             {
-                return this.Name + "_" + this.Address;
+                return this.ChildName + "_" + this.Address;
             }
         }
 
-
-        public string Name
+        public string ParentName
         {
             get
             {
-                return this.strName;
+                return this.strParentName;
             }
         }
 
@@ -85,6 +96,14 @@ namespace Carpool
                 }
 
                 return sRoles;
+            }
+        }
+
+        public string Telephone
+        {
+            get
+            {
+                return this.strTelephone;
             }
         }
 
