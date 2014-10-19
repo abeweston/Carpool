@@ -30,6 +30,17 @@ namespace Carpool
             this.intRankCombined = 999;
         }
 
+        public string CSVRow
+        {
+            get
+            {
+                string sRow = this.MemberDestination.ChildName + "," + this.MemberDestination.ParentName + "," + this.memberDestination.Address +
+                    "," + this.memberDestination.City + "," + this.memberDestination.RolesInCSV + "," + this.memberDestination.Telephone + "," +
+                    this.RankDistance + "," + this.RankRatio + "," + this.RankCombined + "\r\n";
+                return sRow;
+            }
+        }
+
         public double Distance
         {
             get
