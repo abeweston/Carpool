@@ -22,13 +22,27 @@ namespace Carpool
             this.alMembers = new ArrayList();
         }
 
-        private ArrayList Members
+        public ArrayList Members
         {
             get
             {
                 return this.alMembers ;
             }
 
+        }
+
+        public ArrayList IDs
+        {
+            get
+            {
+                ArrayList alIDs = new ArrayList();
+                foreach (CastMember member in this.Members)
+                {
+                    alIDs.Add(member.ID);
+                }
+
+                return alIDs;
+            }
         }
 
         private int ReadFile()

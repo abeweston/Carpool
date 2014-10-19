@@ -23,7 +23,7 @@ namespace Carpool
         private void btnStart_Click(object sender, EventArgs e)
         {
             string sInputFile = @"D:\abe\My Documents\Visual Studio 2010\Projects\Carpool\Carpool\input\cast.csv";
-            CastMembers members = CastMembers(sInputFile);
+            CastMembers members = new CastMembers(sInputFile);
             members.Run();
 
             string sSourceAddress = "177 Williams Ct.";
